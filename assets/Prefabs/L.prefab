@@ -13,7 +13,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "T",
+    "_name": "L",
     "_objFlags": 0,
     "__editorExtras__": {},
     "_parent": null,
@@ -98,7 +98,7 @@
   },
   {
     "__type__": "cc.PrefabInstance",
-    "fileId": "d9ys6qYgFBIbO3iopfWD8p",
+    "fileId": "25mCGPdsBDRJoO7O26Io6W",
     "prefabRootNode": {
       "__id__": 1
     },
@@ -147,7 +147,7 @@
     "value": {
       "__type__": "cc.Vec3",
       "x": 0,
-      "y": 40,
+      "y": 80,
       "z": 0
     }
   },
@@ -209,7 +209,7 @@
   },
   {
     "__type__": "cc.PrefabInstance",
-    "fileId": "9bXhXmH1BBOoRpBpZvRkQU",
+    "fileId": "39PQgi4zdDi6pm9sVUlhjr",
     "prefabRootNode": {
       "__id__": 1
     },
@@ -257,7 +257,7 @@
     ],
     "value": {
       "__type__": "cc.Vec3",
-      "x": 40,
+      "x": 0,
       "y": 40,
       "z": 0
     }
@@ -320,7 +320,7 @@
   },
   {
     "__type__": "cc.PrefabInstance",
-    "fileId": "d9y13GuvpKhYpqE8tfqFk5",
+    "fileId": "bf8VVUnjRM3K9facw97Aw9",
     "prefabRootNode": {
       "__id__": 1
     },
@@ -368,8 +368,8 @@
     ],
     "value": {
       "__type__": "cc.Vec3",
-      "x": 80,
-      "y": 40,
+      "x": 0,
+      "y": 0,
       "z": 0
     }
   },
@@ -431,7 +431,7 @@
   },
   {
     "__type__": "cc.PrefabInstance",
-    "fileId": "4ea3n16CZIt4Bd/a4E7Wya",
+    "fileId": "eaCH2a7PdLw4qJJ2X+rWJ6",
     "prefabRootNode": {
       "__id__": 1
     },
@@ -528,8 +528,8 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 120,
-      "height": 80
+      "width": 80,
+      "height": 120
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -540,10 +540,10 @@
   },
   {
     "__type__": "cc.CompPrefabInfo",
-    "fileId": "aba8WXG7JJvrsgUk7cuFVG"
+    "fileId": "3cRFQx2VxA3LD1Ofrwoj9m"
   },
   {
-    "__type__": "513dcuGjyxKdrlDrT9aIW+2",
+    "__type__": "e37a77p3KFL55jIEvfQ2Ws+",
     "_name": "",
     "_objFlags": 0,
     "node": {
@@ -557,7 +557,7 @@
   },
   {
     "__type__": "cc.CompPrefabInfo",
-    "fileId": "besQgsiAlFqamPsKx0uxua"
+    "fileId": "cfYwxfplpIOr6XGiMl5Wtn"
   },
   {
     "__type__": "cc.PrefabInfo",
@@ -567,7 +567,7 @@
     "asset": {
       "__id__": 0
     },
-    "fileId": "15mzzWH4hBNLvvM4QfudRi",
+    "fileId": "5deu73B5hESZgSI7e4dRkv",
     "nestedPrefabInstanceRoots": [
       {
         "__id__": 2
