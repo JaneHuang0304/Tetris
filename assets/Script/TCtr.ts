@@ -19,10 +19,10 @@ const { ccclass, property } = _decorator;
 export class TCtr extends Component {
 
     public angle = 0;
-    private Sparry = [];
     public gameCtr: GameCtr;
     private nowTime = 0;
     private isEnd = false;
+    private isMove = false;
 
     start () {
         input.on(Input.EventType.KEY_DOWN, this.onKeyDown, this);
@@ -51,6 +51,7 @@ export class TCtr extends Component {
 
     setHorMove(drt: string){
         //左右移動
+        this.isMove = true;
         let isOut = false;
         let movePos: Vec3 = new Vec3(0, 0, 0);
         let nowPos = this.node.getPosition();
@@ -69,10 +70,13 @@ export class TCtr extends Component {
             this.node.setPosition(nowPos);
         }
 
+        this.isMove = false;
     }
 
     setTrans(){
         //設置旋轉位置
+        let adjPos: Vec3;
+        this.isMove = true;
         let SpPos: Array <Vec3> = [];
         switch(this.angle){
             case 0:
@@ -108,60 +112,47 @@ export class TCtr extends Component {
                 break;
         }
 
-        this.node.children.forEach((node, index) => {
-            let pos = node.getPosition();
-            node.setPosition(SpPos[index]);
-        });
+        //判斷旋轉要調整的位置
+        adjPos = this.gameCtr.hasHorOut(SpPos, this.node.getPosition());
 
-        this.getSpArrayPos();
-    }
+        if (adjPos != null){
+            let nowPos = this.node.getPosition();
+            Vec3.add(nowPos, nowPos, adjPos);
+            this.node.setPosition(nowPos);
+            this.node.children.forEach((node, index) => {
+                let pos = node.getPosition();
+                node.setPosition(SpPos[index]);
+            });
+        }
 
-    // addToGameArray(){
-    //     let nowPos = this.node.getPosition();
-        
-    //     let childrenNodes = this.node.children.map((item) => item );
-        
-    //     childrenNodes.forEach((node)=> {
-    //         let pos = node.getPosition();
-    //         let locX = (nowPos.x + pos.x) / 40;
-    //         let locY = (nowPos.y + pos.y) / 40;
-    //         this.gameCtr.gameArray[locX][locY] = node;
-    //         node.setParent(this.gameCtr.GameUI.node);
-    //         node.setPosition(new Vec3(locX * 40, locY * 40, 0));
-    //     });
-    //     this.node.active = false;
-    //     this.node.destroy();
-    // }
-
-    getSpArrayPos(){
-        //取得每個方塊相對位置
-        this.Sparry = [];
-        let nowPos = this.node.getPosition();
-        this.node.children.forEach((node) => {
-            let pos = node.getPosition();
-            let PosX = (nowPos.x + pos.x) / 40;
-            let PosY = (nowPos.y + pos.y) / 40;
-            this.Sparry.push([PosX, PosY]);
-        });
+        this.isMove = false;
     }
 
     update (deltaTime: number) {
         if(this.isEnd) return;
-
-        let isOut = false;
-        let moveDown = new Vec3(0, -40, 0);
-        let nowPos = this.node.getPosition();
+        if(this.isMove) return;
+        //向下移動
         this.nowTime += deltaTime;
         if(this.nowTime >= 0.8){
+            let isOut = false;
+            let moveDown = new Vec3(0, -40, 0);
+            let nowPos = this.node.getPosition();
+
             this.nowTime = 0;
             this.node.children.forEach((node) => {
                 let pos = node.getPosition();
-                let loxY = (nowPos.y + pos.y + moveDown.y) / 40;
-                if(loxY < 0 || loxY > 15){
+                let locX = (nowPos.x + pos.x) / 40;
+                let locY = (nowPos.y + pos.y + moveDown.y) / 40;
+                if (this.gameCtr.hasNodeAt(locX, locY)) {
+                    isOut = true;
+                }
+
+                if (locY < 0) {
                     isOut = true;
                 }
             });
 
+            //超出邊界就結束，否則移動
             if(!isOut){
                 Vec3.add(nowPos, nowPos, moveDown);
                 this.node.setPosition(nowPos);

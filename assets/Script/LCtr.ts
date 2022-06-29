@@ -18,7 +18,6 @@ const { ccclass, property } = _decorator;
 @ccclass('LCtr')
 export class LCtr extends Component {
     public angle = 0;
-    private Sparry = [];
     public gameCtr: GameCtr;
 
     start () {
@@ -29,11 +28,11 @@ export class LCtr extends Component {
     onKeyDown(event: EventKeyboard) {
         switch(event.keyCode){
             case KeyCode.ARROW_RIGHT:
-                this.setMove('r');
+                this.setHorMove('r');
                 break;
 
             case KeyCode.ARROW_LEFT:
-                this.setMove('l');
+                this.setHorMove('l');
                 break;
 
             case KeyCode.ARROW_UP:
@@ -46,20 +45,26 @@ export class LCtr extends Component {
         }  
     }
 
-    setMove(drt: string){
+
+    setHorMove(drt: string){
         //左右移動
-        let movePos: Vec3;
+        let isOut = false;
+        let movePos: Vec3 = new Vec3(0, 0, 0);
         let nowPos = this.node.getPosition();
-        if(drt == 'r'){
-            movePos = new Vec3(40, 0, 0);
-        }
+        movePos.x = drt == 'r' ? 40 : -40;
 
-        if(drt == 'l'){
-            movePos = new Vec3(-40, 0, 0);
-        }
+        this.node.children.forEach((node)=>{
+            let pos = node.getPosition();
+            let locX = (nowPos.x + pos.x + movePos.x) / 40;
+            if (locX < 0 || locX > 9){
+                isOut = true;
+            }
+        });
 
-        Vec3.add(nowPos, nowPos, movePos);
-        this.node.setPosition(nowPos);
+        if (!isOut){
+            Vec3.add(nowPos, nowPos, movePos);
+            this.node.setPosition(nowPos);
+        }
     }
 
     setTrans(){
@@ -75,26 +80,26 @@ export class LCtr extends Component {
             break;
 
             case 90:
-                SpPos.push(new Vec3(80, 40, 0));
-                SpPos.push(new Vec3(80, 0, 0));
-                SpPos.push(new Vec3(80, -40, 0));
-                SpPos.push(new Vec3(40, 0, 0));
+                SpPos.push(new Vec3(80, 80, 0));
+                SpPos.push(new Vec3(40, 80, 0));
+                SpPos.push(new Vec3(0, 80, 0));
+                SpPos.push(new Vec3(0, 40, 0));
                 this.angle = 180;
                 break;
 
             case 180:
-                SpPos.push(new Vec3(80, -40, 0));
-                SpPos.push(new Vec3(40, -40, 0));
-                SpPos.push(new Vec3(0, -40, 0));
+                SpPos.push(new Vec3(0, 80, 0));
+                SpPos.push(new Vec3(40, 80, 0));
+                SpPos.push(new Vec3(40, 40, 0));
                 SpPos.push(new Vec3(40, 0, 0));
                 this.angle = 270;
                 break;
 
             case 270:
-                SpPos.push(new Vec3(0, -40, 0));
-                SpPos.push(new Vec3(0, 0, 0));
-                SpPos.push(new Vec3(0, 40, 0));
-                SpPos.push(new Vec3(40, 0, 0));   
+                SpPos.push(new Vec3(40, 0, 0));
+                SpPos.push(new Vec3(40, 0, 0));
+                SpPos.push(new Vec3(80, 0, 0));
+                SpPos.push(new Vec3(80, 40, 0));   
                 this.angle = 0;             
                 break;
         }
@@ -104,19 +109,6 @@ export class LCtr extends Component {
             node.setPosition(SpPos[index]);
         });
 
-        this.getSpArrayPos();
-    }
-
-    getSpArrayPos(){
-        //取得每個方塊相對位置
-        this.Sparry = [];
-        let nowPos = this.node.getPosition();
-        this.node.children.forEach((node) => {
-            let pos = node.getPosition();
-            let PosX = (nowPos.x + pos.x) / 40;
-            let PosY = (nowPos.y + pos.y) / 40;
-            this.Sparry.push([PosX, PosY]);
-        });
     }
 
     // update (deltaTime: number) {
