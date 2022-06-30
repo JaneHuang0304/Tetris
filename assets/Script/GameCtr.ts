@@ -7,7 +7,7 @@ import { OCtr } from './OCtr';
 import { ICtr } from './ICtr';
 import { ZCtr } from './ZCtr';
 import { SCtr } from './SCtr';
-import { GameUICtr } from './GameUICtr';
+import { TetrisCtrl } from './TetrisCtrl';
 const { ccclass, property } = _decorator;
 
 /**
@@ -29,14 +29,28 @@ export class GameCtr extends Component {
     public GameUI: Sprite | null = null;
 
     @property({type: Prefab})
-    public SpritePrfb: Prefab | null = null;
-
-    @property({type: Prefab})
     public TPrfb: Prefab | null = null;
 
-    public gameArray: Array <Array<Node>> = [[]];
-    private SpType = [TCtr, OCtr, ICtr, ZCtr, SCtr, LCtr, JCtr];
+    @property({type: Prefab})
+    public IPrfb: Prefab | null = null;
 
+    @property({type: Prefab})
+    public OPrfb: Prefab | null = null;
+
+    @property({type: Prefab})
+    public LPrfb: Prefab | null = null;
+
+    @property({type: Prefab})
+    public JPrfb: Prefab | null = null;
+
+    @property({type: Prefab})
+    public ZPrfb: Prefab | null = null;
+
+    @property({type: Prefab})
+    public SPrfb: Prefab | null = null;
+
+    public gameArray: Array <Array<Node>> = [[]];
+    public isGameOver = false;
 
     start () {
         this.iniGameArry();
@@ -63,7 +77,9 @@ export class GameCtr extends Component {
         ItemNode.active = false;
         ItemNode.destroy();
         //加入新圖形
-        this.addSprite();
+        if (!this.isGameOver){
+            this.addSprite();
+        }
     }
 
     //初始gameUI陣列
@@ -81,17 +97,23 @@ export class GameCtr extends Component {
         return this.gameArray[locX][locY] != null;
     }
 
-    //檢查左右是否超出邊界
+    //檢查是否超出邊界
     hasHorOut(SpArry: Array <Vec3>, nowPos: Vec3){
         let Pos = new Vec3(0, 0, 0);
         let outPosX = 0;
         let outPosY = 0;
+        let outCnt = 0;
+        let MaxX = 0;
+        let outMaxX = 0;
         let notMove = false;
+        //取得XY軸超出的最大範圍
         SpArry.forEach((row) => {
             let locX = (nowPos.x + row.x) / 40;
             let locY = (nowPos.y + row.y) / 40;
+            MaxX = MaxX > locX ? MaxX : locX;
+            //超出邊界
             if (locX < 0){
-                outPosX = outPosX < locX ? outPosX : locX;
+                outPosX = outPosX > locX ? locX : outPosX;
             }
 
             if (locX > 9){
@@ -99,16 +121,26 @@ export class GameCtr extends Component {
             }
 
             if (locY < 0){
-                outPosY = outPosY < locY ? outPosY : locY;
+                outPosY = outPosY > locY ? locY : outPosY;
             }
+
+            //沒有超出邊界檢查有沒有方塊重疊
+            if (outPosX == 0 && outPosY == 0){
+                if (this.hasNodeAt(locX, locY)){
+                    outCnt += 1;
+                    outMaxX = outMaxX > locX ? outMaxX : locX;
+                }  
+            }
+        
         });
 
+        //計算超出邊界需移動的位置，不能移動回傳null
         if (outPosX != 0 || outPosY != 0){
             nowPos.x = nowPos.x + (outPosX * -40);
             SpArry.forEach((row) => {
                 let locX = (nowPos.x + row.x) / 40;
                 let locY = (nowPos.y + row.y) / 40;
-                if (this.gameArray[locX][locY] != null){
+                if (this.hasNodeAt(locX, locY)){
                     notMove = true;
                 }
             });
@@ -121,25 +153,65 @@ export class GameCtr extends Component {
             }
         }
 
+        //計算方塊重疊需要移動的位置
+        if (outPosX == 0 && outPosY == 0 && outCnt != 0){
+            let now_Pos = nowPos;
+            //判斷是超出左邊還是右邊
+            outPosX =  MaxX == outMaxX ? outCnt * -40 : outCnt * 40;
+            now_Pos.x = nowPos.x + outPosX;
+            SpArry.forEach((row) => {
+                let locX = (now_Pos.x + row.x) / 40;
+                let locY = (now_Pos.y + row.y) / 40;
+                if (locX < 0 || locX > 9){
+                    notMove = true;
+                }else{
+                    if (this.hasNodeAt(locX, locY)){
+                        notMove = true;
+                    }
+                }
+            });
+
+            if (!notMove){
+                Pos.x = outPosX;
+            } else {
+                Pos = null;
+            }
+        }
+
         return Pos;
+    }
+
+    //檢查遊戲是否結束
+    checkGameOver(){
+        if (this.gameArray[4][13] != null){
+            this.isGameOver = true;
+        }
+    }
+
+    //移除滿格方塊
+    reomveItem(){
+
     }
 
     //加入新圖形
     addSprite(){
-        // let rand = Math.floor(Math.random() * 7);
         if (this.GameUI){
-            let NodeT = instantiate(this.TPrfb);
-            let TCtrl = NodeT.getComponent(TCtr);
-            this.GameUI.node.addChild(NodeT);
-            NodeT.setPosition(new Vec3(120, 520, 0));
-            NodeT.active = true;
-            TCtrl.gameCtr = this;
+            let list = [this.TPrfb, this.OPrfb, this.IPrfb, this.JPrfb, this.LPrfb, this.ZPrfb, this.SPrfb];
+            let random = Math.floor(Math.random() * list.length);
+            let SpNode = instantiate(list[random]);
+            let SpCtrl = SpNode.getComponent(TetrisCtrl);
+            this.GameUI.node.addChild(SpNode);
+            SpNode.setPosition(new Vec3(120, 520, 0));
+            SpNode.active = true;
+            SpCtrl.gameCtr = this;
         }
     }
 
-    // update (deltaTime: number) {
-    //     // [4]
-    // }
+    //產生下一個圖形
+    addNextSprite(){
+        
+    }
+
 }
 
 /**

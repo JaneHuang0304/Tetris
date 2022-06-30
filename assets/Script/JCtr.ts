@@ -1,6 +1,6 @@
 
 import { _decorator, Component, Node, Vec3, input, Input, EventKeyboard, KeyCode } from 'cc';
-import { GameCtr } from './GameCtr';
+import { TetrisCtrl } from './TetrisCtrl';
 const { ccclass, property } = _decorator;
 
 /**
@@ -16,97 +16,43 @@ const { ccclass, property } = _decorator;
  */
  
 @ccclass('JCtr')
-export class JCtr extends Component {
-    public angle = 0;
-    public gameCtr: GameCtr;
-
-    start () {
-        input.on(Input.EventType.KEY_DOWN, this.onKeyDown, this);
-        this.setTrans();
-    }
-
-    onKeyDown(event: EventKeyboard) {
-        switch(event.keyCode){
-            case KeyCode.ARROW_RIGHT:
-                this.setHorMove('r');
-                break;
-
-            case KeyCode.ARROW_LEFT:
-                this.setHorMove('l');
-                break;
-
-            case KeyCode.ARROW_UP:
-                this.setTrans();
-                break;
-
-            case KeyCode.ARROW_DOWN:
-
-                break;
-        }  
-    }
-
-    setHorMove(drt: string){
-        //左右移動
-        let isOut = false;
-        let movePos: Vec3 = new Vec3(0, 0, 0);
-        let nowPos = this.node.getPosition();
-        movePos.x = drt == 'r' ? 40 : -40;
-
-        this.node.children.forEach((node)=>{
-            let pos = node.getPosition();
-            let locX = (nowPos.x + pos.x + movePos.x) / 40;
-            if (locX < 0 || locX > 9){
-                isOut = true;
-            }
-        });
-
-        if (!isOut){
-            Vec3.add(nowPos, nowPos, movePos);
-            this.node.setPosition(nowPos);
-        }
-    }
-
+export class JCtr extends TetrisCtrl {
     setTrans(){
         //設置旋轉位置
-        let SpPos: Array <Vec3> = [];
+        this.SpPos = [];
         switch(this.angle){
             case 0:
-                SpPos.push(new Vec3(40, 80, 0));
-                SpPos.push(new Vec3(40, 40, 0));
-                SpPos.push(new Vec3(40, 0, 0));
-                SpPos.push(new Vec3(0, 0, 0));
+                this.SpPos.push(new Vec3(40, 80, 0));
+                this.SpPos.push(new Vec3(40, 40, 0));
+                this.SpPos.push(new Vec3(40, 0, 0));
+                this.SpPos.push(new Vec3(0, 0, 0));
                 this.angle = 90;
             break;
 
             case 90:
-                SpPos.push(new Vec3(0, 40, 0));
-                SpPos.push(new Vec3(0, 80, 0));
-                SpPos.push(new Vec3(40, 40, 0));
-                SpPos.push(new Vec3(80, 40, 0));
+                this.SpPos.push(new Vec3(80, 0, 0));
+                this.SpPos.push(new Vec3(40, 0, 0));
+                this.SpPos.push(new Vec3(0, 0, 0));
+                this.SpPos.push(new Vec3(0, 40, 0));
                 this.angle = 180;
                 break;
 
             case 180:
-                SpPos.push(new Vec3(0, 0, 0));
-                SpPos.push(new Vec3(0, 40, 0));
-                SpPos.push(new Vec3(0, 80, 0));
-                SpPos.push(new Vec3(40, 80, 0));
+                this.SpPos.push(new Vec3(0, 0, 0));
+                this.SpPos.push(new Vec3(0, 40, 0));
+                this.SpPos.push(new Vec3(0, 80, 0));
+                this.SpPos.push(new Vec3(40, 80, 0));
                 this.angle = 270;
                 break;
 
             case 270:
-                SpPos.push(new Vec3(0, 80, 0));
-                SpPos.push(new Vec3(40, 80, 0));
-                SpPos.push(new Vec3(80, 80, 0));
-                SpPos.push(new Vec3(80, 40, 0));   
+                this.SpPos.push(new Vec3(0, 40, 0));
+                this.SpPos.push(new Vec3(40, 40, 0));
+                this.SpPos.push(new Vec3(80, 40, 0));
+                this.SpPos.push(new Vec3(0, 80, 0));   
                 this.angle = 0;             
                 break;
         }
-
-        this.node.children.forEach((node, index) => {
-            let pos = node.getPosition();
-            node.setPosition(SpPos[index]);
-        });
 
     }
 

@@ -842,12 +842,32 @@
     "GameUI": {
       "__id__": 24
     },
-    "SpritePrfb": {
-      "__uuid__": "7dd3e94e-2d57-47a7-8ace-524960a36bef",
-      "__expectedType__": "cc.Prefab"
-    },
     "TPrfb": {
       "__uuid__": "fa1210c5-ee60-4e5e-adcc-cdd1a6c91196",
+      "__expectedType__": "cc.Prefab"
+    },
+    "IPrfb": {
+      "__uuid__": "6072fc3e-e448-405b-a56a-d724203f01ef",
+      "__expectedType__": "cc.Prefab"
+    },
+    "OPrfb": {
+      "__uuid__": "7c302eae-039c-44b5-acd2-92119155f424",
+      "__expectedType__": "cc.Prefab"
+    },
+    "LPrfb": {
+      "__uuid__": "b483ca3c-a7a6-4a86-a19c-e73670746472",
+      "__expectedType__": "cc.Prefab"
+    },
+    "JPrfb": {
+      "__uuid__": "0833b721-3255-4e7e-a42f-0b62fee5c1a1",
+      "__expectedType__": "cc.Prefab"
+    },
+    "ZPrfb": {
+      "__uuid__": "eb774c84-a97b-4223-946f-20154fdff92a",
+      "__expectedType__": "cc.Prefab"
+    },
+    "SPrfb": {
+      "__uuid__": "0f614624-ff50-4cfe-a0c1-850124402b97",
       "__expectedType__": "cc.Prefab"
     },
     "_id": "b0kHxrUTBMUZMsMdYOnPT9"
