@@ -1,6 +1,12 @@
 
 import { _decorator, Component, Node, Prefab, input, Input, EventKeyboard, KeyCode, Sprite, instantiate, Vec2, Vec3 } from 'cc';
 import { TCtr } from './TCtr';
+import { LCtr } from './LCtr';
+import { JCtr } from './JCtr';
+import { OCtr } from './OCtr';
+import { ICtr } from './ICtr';
+import { ZCtr } from './ZCtr';
+import { SCtr } from './SCtr';
 import { GameUICtr } from './GameUICtr';
 const { ccclass, property } = _decorator;
 
@@ -29,50 +35,38 @@ export class GameCtr extends Component {
     public TPrfb: Prefab | null = null;
 
     public gameArray: Array <Array<Node>> = [[]];
+    private SpType = [TCtr, OCtr, ICtr, ZCtr, SCtr, LCtr, JCtr];
+
 
     start () {
         this.iniGameArry();
-        if (this.GameUI){
-            if (this.TPrfb){
-                
-                //let TspCtr = this.GameUI.node.getComponent(TCtr); // 
-                // T不是一個component
-                // 從目前的階層關係上 T是ＧＡＭＥＵＩ底下的ＮＯＤＥ
-                //所以應該要從node.children去拿
-                // 這下面的拿法是Ｔ已經存在, 
-                // let TNode = this.GameUI.node.children[0];
-                // let TChildren = TNode.children;
-                // TNode.getComponent(TCtr).gameCtr = this;
-
-                // 但Ｐrefab應該要是你從code去新增的
-                // 所以應該要這樣子
-                let NodeT = instantiate(this.TPrfb);
-                let TCtrl = NodeT.getComponent(TCtr);
-                this.GameUI.node.addChild(NodeT);
-                NodeT.setPosition(new Vec3(120, 120, 0));
-                NodeT.active = true;
-                TCtrl.gameCtr = this;
-            }
-        }
+        this.addSprite();
     }
 
+    //將到底部的方塊加入陣列
     addToGameArray(ItemNode: Node){
         let nowPos = ItemNode.getPosition();
         
-        let childrenNodes = ItemNode.children.map((item) => item );
+        let childrenNodes = ItemNode.children.map((item) => item);
         
         childrenNodes.forEach((node)=> {
             let pos = node.getPosition();
             let locX = (nowPos.x + pos.x) / 40;
             let locY = (nowPos.y + pos.y) / 40;
             this.gameArray[locX][locY] = node;
+            //將方塊結點移至gameUI
             node.setParent(this.GameUI.node);
             node.setPosition(new Vec3(locX * 40, locY * 40, 0));
         });
+
+        //咦原本外誆，釋放原本外誆記憶體
         ItemNode.active = false;
         ItemNode.destroy();
+        //加入新圖形
+        this.addSprite();
     }
 
+    //初始gameUI陣列
     iniGameArry(){
         for(let i = 0; i < 10; i++){
             this.gameArray.push([]);
@@ -82,13 +76,66 @@ export class GameCtr extends Component {
         }
     }
 
-    addSprite(){
-        if (this.GameUI){
-
-        }
+    //檢查node是否有東西
+    hasNodeAt(locX, locY: number){
+        return this.gameArray[locX][locY] != null;
     }
 
+    //檢查左右是否超出邊界
+    hasHorOut(SpArry: Array <Vec3>, nowPos: Vec3){
+        let Pos = new Vec3(0, 0, 0);
+        let outPosX = 0;
+        let outPosY = 0;
+        let notMove = false;
+        SpArry.forEach((row) => {
+            let locX = (nowPos.x + row.x) / 40;
+            let locY = (nowPos.y + row.y) / 40;
+            if (locX < 0){
+                outPosX = outPosX < locX ? outPosX : locX;
+            }
 
+            if (locX > 9){
+                outPosX = outPosX > locX - 9 ? outPosX : locX - 9;
+            }
+
+            if (locY < 0){
+                outPosY = outPosY < locY ? outPosY : locY;
+            }
+        });
+
+        if (outPosX != 0 || outPosY != 0){
+            nowPos.x = nowPos.x + (outPosX * -40);
+            SpArry.forEach((row) => {
+                let locX = (nowPos.x + row.x) / 40;
+                let locY = (nowPos.y + row.y) / 40;
+                if (this.gameArray[locX][locY] != null){
+                    notMove = true;
+                }
+            });
+
+            if (!notMove){
+                Pos.x = outPosX * -40;
+                Pos.y = outPosY * -40;
+            } else{
+                Pos = null;
+            }
+        }
+
+        return Pos;
+    }
+
+    //加入新圖形
+    addSprite(){
+        // let rand = Math.floor(Math.random() * 7);
+        if (this.GameUI){
+            let NodeT = instantiate(this.TPrfb);
+            let TCtrl = NodeT.getComponent(TCtr);
+            this.GameUI.node.addChild(NodeT);
+            NodeT.setPosition(new Vec3(120, 520, 0));
+            NodeT.active = true;
+            TCtrl.gameCtr = this;
+        }
+    }
 
     // update (deltaTime: number) {
     //     // [4]
