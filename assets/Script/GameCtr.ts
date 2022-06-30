@@ -54,7 +54,6 @@ export class GameCtr extends Component {
             let locX = (nowPos.x + pos.x) / 40;
             let locY = (nowPos.y + pos.y) / 40;
             this.gameArray[locX][locY] = node;
-            console.log(`add node to [${locX}][${locY}]`);
             //將方塊結點移至gameUI
             node.setParent(this.GameUI.node);
             node.setPosition(new Vec3(locX * 40, locY * 40, 0));
