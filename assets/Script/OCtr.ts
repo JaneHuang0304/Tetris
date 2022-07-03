@@ -1,5 +1,5 @@
 
-import { _decorator, Component, Node, input, Input, EventKeyboard, KeyCode, Vec3 } from 'cc';
+import { _decorator, Vec3 } from 'cc';
 import { TetrisCtrl } from './TetrisCtrl';
 const { ccclass, property } = _decorator;
 
@@ -18,7 +18,7 @@ const { ccclass, property } = _decorator;
 @ccclass('OCtr')
 export class OCtr extends TetrisCtrl {
     
-    setTrans(){
+    public setTrans(){
         //設置旋轉位置
         this.SpPos = [];
         switch(this.angle){

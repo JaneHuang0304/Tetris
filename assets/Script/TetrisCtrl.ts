@@ -50,6 +50,7 @@ export class TetrisCtrl extends Component {
         }  
     }
 
+    //設置旋轉位置
     doTrans() {
         this.setTrans();
         this.transVerify();
@@ -85,10 +86,11 @@ export class TetrisCtrl extends Component {
         this.isMove = false;
     }
 
-    setTrans(){
+    public setTrans(){
         throw "please override this func";
     }
 
+    //調整旋轉後的位置
     transVerify() {
         let adjPos = this.gameCtr.hasHorOut(this.SpPos, this.node.getPosition());
         if (adjPos != null){
@@ -107,7 +109,7 @@ export class TetrisCtrl extends Component {
         if(this.isMove) return;
         //向下移動
         this.nowTime += deltaTime;
-        if(this.nowTime >= 0.8){
+        if(this.nowTime >= 0.3){
             let isOut = false;
             let moveDown = new Vec3(0, -40, 0);
             let nowPos = this.node.getPosition();

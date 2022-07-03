@@ -18,7 +18,7 @@ const { ccclass, property } = _decorator;
 @ccclass('ICtr')
 export class ICtr extends TetrisCtrl {
 
-    setTrans(){
+    public setTrans(){
         //設置旋轉位置
         this.SpPos = [];
         switch(this.angle){
