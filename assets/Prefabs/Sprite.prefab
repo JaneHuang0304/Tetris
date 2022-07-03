@@ -25,13 +25,10 @@
       },
       {
         "__id__": 4
-      },
-      {
-        "__id__": 6
       }
     ],
     "_prefab": {
-      "__id__": 8
+      "__id__": 6
     },
     "_lpos": {
       "__type__": "cc.Vec3",
@@ -132,23 +129,6 @@
   {
     "__type__": "cc.CompPrefabInfo",
     "fileId": "aeyMiXjmxKnqMI/hJci3/U"
-  },
-  {
-    "__type__": "66bcfdpieRN9oWVMZW3tCtg",
-    "_name": "",
-    "_objFlags": 0,
-    "node": {
-      "__id__": 1
-    },
-    "_enabled": true,
-    "__prefab": {
-      "__id__": 7
-    },
-    "_id": ""
-  },
-  {
-    "__type__": "cc.CompPrefabInfo",
-    "fileId": "cc5kJ/InNPv4YaZenmjkvN"
   },
   {
     "__type__": "cc.PrefabInfo",
